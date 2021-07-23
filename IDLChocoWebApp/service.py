@@ -2,28 +2,49 @@ import re
 
 import requests
 
+IDLAPI = 'https://idlreasoner-choco-api.herokuapp.com/api/'
 
-IDLAPI = 'https://idlreasoner-choco-api.herokuapp.com/'
 
-def generate_request(url, params={}):
-    response = requests.get(url, params=params)
+def generate_request(url, json, params={}):
+    url += '?'
+    for (key, value) in params.items():
+        if key == "request":
+            url += value
+        else:
+            url += key + '=' + str(value) + '&'
 
-    if response.status_code == 200:
-        return response.json()
-
-def invoke_api(get, form):
-    params = {}
-    params['operationPath']
-    params['operationType']
-    params['request']
-    params['parameter']
-    if re.match(r"^http(s)?://+", form['api_specification']):
-        params['specificationUrl'] = form['api_specification']
+    if json is None:
+        response = requests.get(url)
     else:
-        json = form['api_specification']
-    response = generate_request(IDLAPI + form['analysis_operation'], None)
-    if response:
-       user = response.get('results')[0]
-       return user.get('name').get('first')
+        url = url[:-1]
+        response = requests.post(url, data=json)
 
-    return ''
+    return response
+
+
+def invoke_api(form):
+    request = ""
+    if form.cleaned_data.get('request') is not None and form.cleaned_data.get('request') != '':
+        params = form.cleaned_data.get('request').split('&')
+        for param in params:
+            param = param.split('=', 1)
+            request += "request[" + param[0] + "]=" + param[1] + "&"
+        request = request[:-1]
+    params = {'operationPath': form.cleaned_data.get('operation_path'),
+              'operationType': form.cleaned_data.get('operation_type')}
+
+    if request is not None:
+        params['request'] = request
+    if form.cleaned_data.get('parameter') is not None and form.cleaned_data.get('parameter') != '':
+        params['parameter'] = form.cleaned_data.get('parameter')
+
+    json = None
+
+    if re.match(r"^http(s)?://+", form.cleaned_data.get('api_specification')):
+        params['specificationUrl'] = form.cleaned_data.get('api_specification')
+    else:
+        json = form.cleaned_data.get('api_specification')
+
+    response = generate_request(IDLAPI + form.cleaned_data.get('analysis_operation'), json, params)
+
+    return response

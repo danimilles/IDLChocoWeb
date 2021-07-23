@@ -3,9 +3,18 @@
 
 {% block response %}
     {% if response %}
-    <div class="alert alert-success" role="alert">
-      {{ response }}
-    </div>
+        {% if response.err %}
+            <div class="alert alert-danger" role="alert">
+        {% endif %}
+        {% if not response.err %}
+            <div class="alert alert-success" role="alert">
+        {% endif %}
+        {{ response.msg }}
+        {% if response.req %}
+            <br>
+            {{ response.req }}
+        {% endif %}
+        </div>
     {% endif %}
 {% endblock %}
 
@@ -19,14 +28,27 @@
     </form>
 
     <script>
-    $(document).ready(function(){ $("#div_id_request").hide()});
-    $(document).ready(function(){ $("#div_id_parameter").hide()});
     $(document).ready(function(){
+        if($("#id_analysis_operation").val() === "isFalseOptional" ||
+                $("#id_analysis_operation").val() === "isDeadParameter"){
+                    $("#div_id_parameter").show();
+                } else{
+                    $("#id_parameter").val(null);
+                    $("#div_id_parameter").hide();
+                }
+        if($("#id_analysis_operation").val() === "isValidPartialRequest" ||
+                $("#id_analysis_operation").val() === "isValidRequest"){
+                    $("#div_id_request").show();
+                } else{
+                    $("#id_request").val(null);
+                    $("#div_id_request").hide();
+                }
         $("#id_analysis_operation").change(function(){
                 if($("#id_analysis_operation").val() === "isValidPartialRequest" ||
                 $("#id_analysis_operation").val() === "isValidRequest"){
                     $("#div_id_request").show();
                 } else{
+                    $("#id_request").val(null);
                     $("#div_id_request").hide();
                 }
             });
@@ -35,6 +57,7 @@
                 $("#id_analysis_operation").val() === "isDeadParameter"){
                     $("#div_id_parameter").show();
                 } else{
+                    $("#id_parameter").val(null);
                     $("#div_id_parameter").hide();
                 }
             });
