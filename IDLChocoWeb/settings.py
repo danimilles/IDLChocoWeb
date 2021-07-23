@@ -36,8 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'IDLChocoWebApp.apps.IdlchocowebappConfig',
+    'crispy_forms',
+    'IDLChocoWebApp.apps.IdlchocowebappConfig'
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

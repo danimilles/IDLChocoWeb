@@ -1,3 +1,5 @@
+import re
+
 import requests
 
 
@@ -9,8 +11,17 @@ def generate_request(url, params={}):
     if response.status_code == 200:
         return response.json()
 
-def get_username(analysis_operation, params={}):
-    response = generate_request(IDLAPI + analysis_operation, params)
+def invoke_api(get, form):
+    params = {}
+    params['operationPath']
+    params['operationType']
+    params['request']
+    params['parameter']
+    if re.match(r"^http(s)?://+", form['api_specification']):
+        params['specificationUrl'] = form['api_specification']
+    else:
+        json = form['api_specification']
+    response = generate_request(IDLAPI + form['analysis_operation'], None)
     if response:
        user = response.get('results')[0]
        return user.get('name').get('first')

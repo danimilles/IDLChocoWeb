@@ -1,5 +1,43 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block response %}
+    {% if response %}
+    <div class="alert alert-success" role="alert">
+      {{ response }}
+    </div>
+    {% endif %}
+{% endblock %}
 
 {% block contenido %}
-{{ form.as_p }}
+    <form method="post" >
+    {% csrf_token %}
+    {{ form|crispy }}
+        <div style="text-align:center;">
+            <button type="submit"  class="btn btn-success">Analyze</button>
+        </div>
+    </form>
+
+    <script>
+    $(document).ready(function(){ $("#div_id_request").hide()});
+    $(document).ready(function(){ $("#div_id_parameter").hide()});
+    $(document).ready(function(){
+        $("#id_analysis_operation").change(function(){
+                if($("#id_analysis_operation").val() === "isValidPartialRequest" ||
+                $("#id_analysis_operation").val() === "isValidRequest"){
+                    $("#div_id_request").show();
+                } else{
+                    $("#div_id_request").hide();
+                }
+            });
+        $("#id_analysis_operation").change(function(){
+                if($("#id_analysis_operation").val() === "isFalseOptional" ||
+                $("#id_analysis_operation").val() === "isDeadParameter"){
+                    $("#div_id_parameter").show();
+                } else{
+                    $("#div_id_parameter").hide();
+                }
+            });
+    });
+    </script>
 {% endblock %}
