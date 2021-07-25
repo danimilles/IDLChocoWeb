@@ -9,10 +9,11 @@ def generate_request(url, json, params={}):
     url += '?'
     for (key, value) in params.items():
         if key == "request":
-            url += value
+            url += value + '&'
         else:
             url += key + '=' + str(value) + '&'
 
+    url = url[:-1]
     if json is None:
         response = requests.get(url)
     else:

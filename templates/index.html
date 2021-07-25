@@ -4,10 +4,10 @@
 {% block response %}
     {% if response %}
         {% if response.err %}
-            <div class="alert alert-danger" role="alert">
+            <div style="overflow-wrap: break-word" class="alert alert-danger text-wrap text-break" role="alert">
         {% endif %}
         {% if not response.err %}
-            <div class="alert alert-success" role="alert">
+            <div style="overflow-wrap: break-word" class="alert alert-success text-wrap text-break">
         {% endif %}
         {{ response.msg }}
         {% if response.req %}
